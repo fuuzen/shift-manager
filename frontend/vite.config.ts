@@ -6,6 +6,8 @@ import viteReact from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
+  const API_URL = env.VITE_API_URL || "http://localhost:3000";
+  const DOMAIN = env.VITE_DOMAIN || "localhost:5173";
 
   return {
     plugins: [TanStackRouterVite(), viteReact()],
@@ -17,11 +19,14 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         "/api": {
-          target: env.VITE_API_URL,
+          target: API_URL,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },
+    define: {
+      'import.meta.env.DOMAIN': JSON.stringify(DOMAIN),
+    }
   };
 });

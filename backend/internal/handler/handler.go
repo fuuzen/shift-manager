@@ -120,4 +120,9 @@ func (h *Handler) RegisterRoutes() {
 			})
 		})
 	})
+
+	// iCalendar 订阅服务, iCalendar 协议只能是公开的, 所以不需要身份验证
+	h.Mux.Route("/", func(r chi.Router) {
+		r.Get("/{id}.ics", h.icalHandler)
+	})
 }
